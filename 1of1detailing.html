@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1of1Detailing Niš — Profesionalni Auto Detailing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#1a1a1a;--bg2:#111111;--card:#232323;--card2:#2a2a2a;
+  --orange:#ff6a00;--orange2:#e55f00;
+  --orange-glow:rgba(255,106,0,0.18);--orange-dim:rgba(255,106,0,0.10);
+  --light:#f5f5f5;--mid:#888;--faint:rgba(245,245,245,0.06);
+  --border:rgba(255,255,255,0.07);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--light);font-family:'Inter',sans-serif;overflow-x:hidden;cursor:none;line-height:1.6}
+
+/* CURSOR */
+#cur,#cur-r{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+#cur{width:10px;height:10px;background:var(--orange);transition:transform .08s,opacity .2s}
+#cur-r{width:34px;height:34px;border:1.5px solid rgba(255,106,0,.45);transition:transform .2s ease}
+
+/* GRAIN */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:.5}
+
+/* CANVAS */
+#drops-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:20px 5%;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s,border-color .4s;border-bottom:1px solid transparent}
+nav.solid{background:rgba(14,14,14,.96);backdrop-filter:blur(14px);padding:12px 5%;border-bottom-color:rgba(255,106,0,.1)}
+.nav-logo{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.2rem;color:var(--light);text-decoration:none;letter-spacing:-.5px}
+.nav-logo span{color:var(--orange)}
+.nav-links{display:flex;align-items:center;gap:32px;list-style:none}
+.nav-links a{color:rgba(245,245,245,.7);text-decoration:none;font-size:.75rem;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover{color:var(--orange)}
+.nav-cta{background:var(--orange) !important;color:#fff !important;padding:9px 20px;border-radius:3px;font-weight:700 !important;letter-spacing:.5px !important;text-transform:none !important;font-size:.84rem !important;transition:background .2s !important}
+.nav-cta:hover{background:var(--orange2) !important}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;z-index:1001;padding:4px}
+.hamburger span{display:block;width:24px;height:2px;background:var(--light);border-radius:2px;transition:.3s}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mobile-nav{display:none;position:fixed;inset:0;background:rgba(10,10,10,.98);backdrop-filter:blur(20px);flex-direction:column;align-items:center;justify-content:center;gap:36px;z-index:999}
+.mobile-nav.open{display:flex}
+.mobile-nav a{color:var(--light);text-decoration:none;font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.8rem;letter-spacing:-1px;transition:color .2s}
+.mobile-nav a:hover{color:var(--orange)}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;padding:140px 5% 80px;position:relative;overflow:hidden}
+.hero-glow{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(255,106,0,.09) 0%,transparent 70%);top:-200px;right:-100px;pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.015) 0,transparent 1px,transparent 80px,rgba(255,255,255,.015) 80px),repeating-linear-gradient(0deg,rgba(255,255,255,.015) 0,transparent 1px,transparent 80px,rgba(255,255,255,.015) 80px);pointer-events:none}
+.hero-content{position:relative;z-index:2;max-width:680px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,106,0,.1);border:1px solid rgba(255,106,0,.28);color:var(--orange);font-size:.68rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;padding:6px 14px;border-radius:2px;margin-bottom:26px}
+.hero-eyebrow::before{content:'';width:5px;height:5px;background:var(--orange);border-radius:50%}
+h1.headline{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(3rem,6.5vw,5.2rem);line-height:1.04;letter-spacing:-2.5px;margin-bottom:22px}
+h1.headline em{font-style:normal;color:var(--orange)}
+.hero-sub{font-size:1.08rem;color:rgba(245,245,245,.62);line-height:1.75;margin-bottom:38px;max-width:500px}
+.btn-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:44px}
+.btn-p{background:var(--orange);color:#fff;padding:15px 30px;border-radius:3px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:1px;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:background .2s,transform .15s,box-shadow .2s}
+.btn-p:hover{background:var(--orange2);transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,106,0,.38)}
+.btn-o{border:1.5px solid rgba(245,245,245,.22);color:var(--light);padding:14px 26px;border-radius:3px;font-family:'Montserrat',sans-serif;font-weight:600;font-size:.82rem;letter-spacing:1px;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:border-color .2s,color .2s}
+.btn-o:hover{border-color:var(--orange);color:var(--orange)}
+.trust{display:flex;flex-wrap:wrap;gap:22px;font-size:.78rem;color:rgba(245,245,245,.48);font-weight:500}
+.trust span{display:flex;align-items:center;gap:7px}
+.trust span::before{content:'';width:5px;height:5px;background:var(--orange);border-radius:50%;flex-shrink:0}
+
+/* SHARED */
+section{position:relative;z-index:1}
+.sec{padding:96px 5%}
+.sec-label{font-size:.68rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:10px;display:block}
+.sec-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(1.8rem,3vw,2.6rem);letter-spacing:-1px;margin-bottom:52px}
+.sec-title.center,.sec-label.center{text-align:center}
+.divider{max-width:1200px;margin:0 auto;height:1px;background:linear-gradient(90deg,transparent,rgba(255,106,0,.18),transparent)}
+.inner{max-width:1200px;margin:0 auto}
+
+/* STORY */
+#story{background:var(--bg2)}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.story-left h2{font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(1.9rem,3vw,2.5rem);letter-spacing:-1px;line-height:1.2;margin-bottom:16px}
+.story-left h2 em{font-style:normal;color:var(--orange)}
+.story-left p{color:rgba(245,245,245,.58);line-height:1.8}
+.story-right{display:flex;flex-direction:column;gap:18px}
+.sitem{display:flex;align-items:flex-start;gap:16px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--orange);padding:20px 22px;border-radius:4px;transition:transform .22s,box-shadow .22s}
+.sitem:hover{transform:translateX(5px);box-shadow:0 6px 24px rgba(0,0,0,.35)}
+.sitem-icon{color:var(--orange);flex-shrink:0;margin-top:2px}
+.sitem h4{font-family:'Montserrat',sans-serif;font-size:.9rem;font-weight:700;margin-bottom:4px}
+.sitem p{font-size:.8rem;color:var(--mid);line-height:1.55}
+
+/* SERVICES */
+#services{background:var(--bg)}
+.acc{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.acc-item{background:var(--card);border:1px solid var(--border);border-radius:5px;overflow:hidden;transition:border-color .25s,box-shadow .25s}
+.acc-item.open{border-color:rgba(255,106,0,.3);box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.acc-head{display:flex;align-items:center;gap:16px;padding:24px 26px;cursor:pointer;transition:background .2s;user-select:none}
+.acc-head:hover{background:rgba(255,255,255,.03)}
+.acc-num{width:36px;height:36px;flex-shrink:0;background:var(--orange-dim);border:1px solid rgba(255,106,0,.25);border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:800;font-size:.78rem;color:var(--orange)}
+.acc-meta{flex:1}
+.acc-name{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1rem;margin-bottom:3px}
+.acc-price{font-size:.78rem;color:var(--orange);font-weight:600}
+.acc-arrow{width:28px;height:28px;flex-shrink:0;border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--mid);transition:transform .3s,background .2s,border-color .2s,color .2s}
+.acc-item.open .acc-arrow{transform:rotate(180deg);background:var(--orange-dim);border-color:rgba(255,106,0,.3);color:var(--orange)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}
+.acc-item.open .acc-body{max-height:600px}
+.acc-inner{padding:0 26px 26px 26px}
+.acc-inner ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.acc-inner li{display:flex;align-items:flex-start;gap:9px;font-size:.84rem;color:rgba(245,245,245,.72);line-height:1.5}
+.acc-inner li::before{content:'';width:5px;height:5px;background:var(--orange);border-radius:50%;flex-shrink:0;margin-top:7px}
+.focus-line{max-width:900px;margin:36px auto 0;background:linear-gradient(135deg,rgba(255,106,0,.1),rgba(255,106,0,.05));border:1px solid rgba(255,106,0,.22);border-radius:4px;padding:20px 28px;font-style:italic;color:rgba(245,245,245,.7);font-size:.92rem;text-align:center;line-height:1.7}
+.focus-line strong{color:var(--orange);font-style:normal}
+
+/* PROCESS */
+#process{background:var(--bg2)}
+.proc-steps{display:flex;gap:0;max-width:800px;margin:0 auto;position:relative}
+.proc-steps::before{content:'';position:absolute;top:27px;left:56px;right:56px;height:1px;background:linear-gradient(90deg,var(--orange),rgba(255,106,0,.12),var(--orange))}
+.pstep{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
+.pnum{width:54px;height:54px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.1rem;margin-bottom:20px;position:relative;z-index:1;box-shadow:0 0 0 8px rgba(255,106,0,.1)}
+.pstep h4{font-family:'Montserrat',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:8px}
+.pstep p{font-size:.8rem;color:var(--mid);line-height:1.6}
+
+/* TESTIMONIALS */
+#testimonials{background:var(--bg)}
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:1100px;margin:0 auto}
+.tcard{background:var(--card);border:1px solid var(--border);border-radius:5px;padding:32px 28px;transition:transform .22s,box-shadow .22s,border-color .22s;position:relative;overflow:hidden}
+.tcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.tcard:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,.45);border-color:rgba(255,106,0,.18)}
+.tcard:hover::before{transform:scaleX(1)}
+.tcard-stars{color:var(--orange);font-size:1rem;letter-spacing:3px;margin-bottom:18px;display:block}
+.tcard-text{font-size:.9rem;color:rgba(245,245,245,.72);line-height:1.75;margin-bottom:20px;font-style:italic}
+.tcard-text::before{content:'\201C';color:var(--orange);font-size:1.4rem;font-style:normal;font-family:'Montserrat',sans-serif;font-weight:900;line-height:1;margin-right:2px}
+.tcard-author{font-size:.78rem;font-weight:600;color:var(--mid);letter-spacing:.5px}
+
+/* CONTACT */
+#contact{background:var(--bg2)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;max-width:1100px;margin:0 auto}
+.contact-left h2{font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(1.7rem,2.5vw,2.2rem);letter-spacing:-1px;margin-bottom:10px}
+.contact-left>p{color:var(--mid);margin-bottom:36px;line-height:1.75}
+.citem{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--light);margin-bottom:18px;transition:color .2s}
+.citem:hover{color:var(--orange)}
+.cicon{width:44px;height:44px;flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--orange);transition:background .2s,border-color .2s}
+.citem:hover .cicon{background:var(--orange-dim);border-color:rgba(255,106,0,.3)}
+.ctxt span{display:block;font-size:.68rem;color:var(--mid);font-weight:600;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:2px}
+.ctxt strong{font-size:.92rem;font-weight:600}
+.map-wrap{border-radius:6px;overflow:hidden;border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.map-wrap iframe{display:block;width:100%;height:360px;border:0;filter:grayscale(.25) brightness(.8) contrast(1.1)}
+
+/* SOCIAL */
+#social{background:var(--bg);text-align:center}
+.social-sub{color:var(--mid);margin-bottom:40px;font-size:.95rem}
+.social-icons{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+.social-btn{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);padding:16px 28px;border-radius:4px;color:var(--light);text-decoration:none;font-weight:600;font-size:.88rem;transition:background .2s,border-color .2s,transform .18s,box-shadow .2s}
+.social-btn:hover{transform:translateY(-3px)}
+.social-btn.ig:hover{border-color:#e1306c;background:rgba(225,48,108,.08);box-shadow:0 8px 24px rgba(225,48,108,.2)}
+.social-btn.fb:hover{border-color:#1877f2;background:rgba(24,119,242,.08);box-shadow:0 8px 24px rgba(24,119,242,.2)}
+.social-btn.tt:hover{border-color:#69c9d0;background:rgba(105,201,208,.08);box-shadow:0 8px 24px rgba(105,201,208,.2)}
+
+/* CTA */
+#cta{padding:96px 5%;text-align:center;background:linear-gradient(135deg,#0d0d0d,#1a1a1a);position:relative;overflow:hidden}
+#cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(255,106,0,.07),transparent 65%)}
+#cta h2{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(1.9rem,3.5vw,3rem);letter-spacing:-1.5px;margin-bottom:14px;position:relative}
+#cta p{color:var(--mid);margin-bottom:40px;position:relative;font-size:.97rem}
+.cta-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;position:relative}
+.btn-wa{background:#25d366;color:#fff;padding:15px 30px;border-radius:3px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:1px;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:background .2s,transform .15s,box-shadow .2s}
+.btn-wa:hover{background:#1fb858;transform:translateY(-2px);box-shadow:0 10px 30px rgba(37,211,102,.32)}
+
+/* FOOTER */
+footer{background:#0a0a0a;border-top:1px solid var(--border);padding:38px 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-logo{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.05rem;color:var(--light);text-decoration:none}
+.f-logo span{color:var(--orange)}
+.f-mid{text-align:center}
+.f-mid p{font-size:.78rem;color:#444;font-style:italic}
+.f-right{text-align:right;font-size:.78rem;color:#555}
+.f-right a{color:#555;text-decoration:none;transition:color .2s}
+.f-right a:hover{color:var(--orange)}
+
+/* FLOATERS */
+.float-call{display:none;position:fixed;bottom:82px;left:14px;background:var(--orange);color:#fff;padding:13px 20px;border-radius:50px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.8rem;text-decoration:none;z-index:500;box-shadow:0 6px 20px rgba(255,106,0,.4);align-items:center;gap:7px;transition:transform .2s}
+.float-call:hover{transform:scale(1.05)}
+.float-wa{position:fixed;bottom:22px;right:18px;width:54px;height:54px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:500;box-shadow:0 6px 24px rgba(37,211,102,.4);transition:transform .2s}
+.float-wa:hover{transform:scale(1.1)}
+.float-wa svg{width:26px;height:26px;fill:#fff}
+
+/* REVEAL */
+.rev{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.rev.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.17s}.d3{transition-delay:.27s}.d4{transition-delay:.38s}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hamburger{display:flex}
+  .nav-links{display:none}
+  .story-grid{grid-template-columns:1fr;gap:44px}
+  .test-grid{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr}
+  .acc-inner ul{grid-template-columns:1fr}
+  .proc-steps{flex-direction:column;gap:28px}
+  .proc-steps::before{display:none}
+  .float-call{display:flex}
+}
+@media(max-width:600px){
+  nav{padding:14px 4%}
+  #hero{padding:120px 4% 70px}
+  .btn-row,.cta-row{flex-direction:column}
+  .sec{padding:72px 4%}
+  .social-icons{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-r"></div>
+<canvas id="drops-canvas"></canvas>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">1of1<span>Detailing</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Usluge</a></li>
+    <li><a href="#testimonials">Galerija</a></li>
+    <li><a href="#contact">Kontakt</a></li>
+    <li><a href="tel:0631612619" class="nav-cta">&#9990; 063 161 2619</a></li>
+  </ul>
+  <div class="hamburger" id="ham"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mnav">
+  <a href="#services" onclick="closeMnav()">Usluge</a>
+  <a href="#testimonials" onclick="closeMnav()">Galerija</a>
+  <a href="#contact" onclick="closeMnav()">Kontakt</a>
+  <a href="tel:0631612619" style="color:var(--orange)" onclick="closeMnav()">063 161 2619</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Nis Premier Auto Detailing</div>
+    <h1 class="headline">Perfekcija u<br>svakom <em>detalju.</em></h1>
+    <p class="hero-sub">Profesionalni detailing u Nisu. Tvoj auto kao nov — svaki put, bez izuzetka.</p>
+    <div class="btn-row">
+      <a href="#contact" class="btn-p">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Zakazi termin
+      </a>
+      <a href="tel:0631612619" class="btn-o">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 9.86 19.79 19.79 0 01.06 1.22 2 2 0 012 .07h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        Pozovi odmah
+      </a>
+    </div>
+    <div class="trust">
+      <span>Zadovoljni klijenti</span>
+      <span>Brza usluga</span>
+      <span>Profesionalna oprema</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- STORY -->
+<section id="story" class="sec">
+  <div class="inner">
+    <div class="story-grid">
+      <div class="story-left rev">
+        <span class="sec-label">Ko smo mi</span>
+        <h2>Tretiramo svaki auto<br>kao da je <em>nas.</em></h2>
+        <p style="margin-top:14px">Osnivamo se na jednom principu — maksimalna paznja svakom detalju. Nema brzine na ustrb kvaliteta, nema kompromisa.</p>
+      </div>
+      <div class="story-right">
+        <div class="sitem rev d1">
+          <div class="sitem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <div><h4>Posvetenost detaljima</h4><p>Svaki centimetar vozila tretira se sa paznjom i strpljenjem.</p></div>
+        </div>
+        <div class="sitem rev d2">
+          <div class="sitem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div><h4>Profesionalna hemija i oprema</h4><p>Koristimo samo proverena sredstva za zastitu laka i enterijera.</p></div>
+        </div>
+        <div class="sitem rev d3">
+          <div class="sitem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+          <div><h4>Rad sa svim tipovima vozila</h4><p>Sedan, SUV, karavan, sportski automobil — svi su dobrodosli.</p></div>
+        </div>
+        <div class="sitem rev d4">
+          <div class="sitem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+          <div><h4>Kvalitet iznad kvantiteta</h4><p>Radimo manje termina, ali svaki termin je uradjen besprekorno.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SERVICES -->
+<section id="services" class="sec">
+  <div class="inner">
+    <span class="sec-label center rev">Nase usluge</span>
+    <h2 class="sec-title center rev">Sta nudimo</h2>
+    <div class="acc">
+      <div class="acc-item rev d1" data-acc>
+        <div class="acc-head">
+          <div class="acc-num">01</div>
+          <div class="acc-meta">
+            <div class="acc-name">Komplet pranje</div>
+            <div class="acc-price">Cena od 1.500 RSD</div>
+          </div>
+          <div class="acc-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </div>
+        <div class="acc-body"><div class="acc-inner"><ul>
+          <li>Spoljasnje pranje vozila</li>
+          <li>Pranje felni i guma</li>
+          <li>Susenje vozila</li>
+          <li>Usisavanje enterijera</li>
+          <li>Brisanje plastika</li>
+          <li>Pranje stakala</li>
+        </ul></div></div>
+      </div>
+      <div class="acc-item rev d2" data-acc>
+        <div class="acc-head">
+          <div class="acc-num">02</div>
+          <div class="acc-meta">
+            <div class="acc-name">Dubinsko pranje</div>
+            <div class="acc-price">Cena od 5.000 RSD</div>
+          </div>
+          <div class="acc-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </div>
+        <div class="acc-body"><div class="acc-inner"><ul>
+          <li>Dubinsko pranje sedista i enterijera</li>
+          <li>Dubinsko pranje patosnica</li>
+          <li>Ciscenje tapacirunga</li>
+          <li>Uklanjanje fleka i neprijatnih mirisa</li>
+          <li>Detaljno ciscenje enterijera</li>
+          <li>Dezinfekcija</li>
+          <li>Spoljasnje pranje vozila</li>
+        </ul></div></div>
+      </div>
+      <div class="acc-item rev d3" data-acc>
+        <div class="acc-head">
+          <div class="acc-num">03</div>
+          <div class="acc-meta">
+            <div class="acc-name">Detailing automobila</div>
+            <div class="acc-price">Cena od 7.000 RSD</div>
+          </div>
+          <div class="acc-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </div>
+        <div class="acc-body"><div class="acc-inner"><ul>
+          <li>Detaljno spoljasnje pranje (svaki deo vozila)</li>
+          <li>Detaljno pranje felni, guma i tesko dostupnih mesta</li>
+          <li>Detaljno unutrasnje ciscenje (svaki detalj enterijera)</li>
+          <li>Ciscenje ventilacionih otvora, lajsni i sitnih detalja</li>
+          <li>Zavrsno rucno doterivanje svih povrsina</li>
+        </ul></div></div>
+      </div>
+    </div>
+    <p class="focus-line rev"><strong>Detailing</strong> je maksimalna paznja svakom detalju vozila — <strong>spolja i unutra.</strong></p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROCESS -->
+<section id="process" class="sec">
+  <div class="inner">
+    <span class="sec-label center rev">Kako radimo</span>
+    <h2 class="sec-title center rev">Proces u 3 koraka</h2>
+    <div class="proc-steps">
+      <div class="pstep rev d1"><div class="pnum">1</div><h4>Dovozis auto</h4><p>Zakazi termin i donesi nam vozilo na adresu u Nisu.</p></div>
+      <div class="pstep rev d2"><div class="pnum">2</div><h4>Mi radimo detalje</h4><p>Nas tim brine za svaki detalj. Ti se odmoras.</p></div>
+      <div class="pstep rev d3"><div class="pnum">3</div><h4>Preuzimas savrsen auto</h4><p>Vozilo izlazi blistavo kao novo. Garantovano zadovoljstvo.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="sec">
+  <div class="inner">
+    <span class="sec-label center rev">Utisci klijenata</span>
+    <h2 class="sec-title center rev">Sta kazu nasi klijenti</h2>
+    <div class="test-grid">
+      <div class="tcard rev d1">
+        <span class="tcard-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+        <p class="tcard-text">Auto izgleda bolje nego kad sam ga kupio. Svaka preporuka.</p>
+        <span class="tcard-author">&#8212; Nikola, Nis</span>
+      </div>
+      <div class="tcard rev d2">
+        <span class="tcard-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+        <p class="tcard-text">Dubinsko pranje je odradjeno perfektno. Unutrasnjost kao nova.</p>
+        <span class="tcard-author">&#8212; Marko, Nis</span>
+      </div>
+      <div class="tcard rev d3">
+        <span class="tcard-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+        <p class="tcard-text">Brza usluga i odlican rezultat. Definitivno se vracam.</p>
+        <span class="tcard-author">&#8212; Jovana, Nis</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact" class="sec">
+  <div class="inner">
+    <div class="contact-grid">
+      <div class="contact-left rev">
+        <span class="sec-label">Zakazite termin</span>
+        <h2>Kontaktirajte nas</h2>
+        <p>Slobodnih mesta je uvek malo. Kontaktirajte nas telefonom ili WhatsApp-om i zakazite termin.</p>
+        <a href="tel:0631612619" class="citem">
+          <div class="cicon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 9.86 19.79 19.79 0 01.06 1.22 2 2 0 012 .07h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+          <div class="ctxt"><span>Telefon</span><strong>063 161 2619</strong></div>
+        </a>
+        <a href="https://wa.me/381631612619" target="_blank" rel="noopener" class="citem">
+          <div class="cicon"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+          <div class="ctxt"><span>WhatsApp</span><strong>Pisi nam odmah</strong></div>
+        </a>
+        <div class="citem" style="cursor:default">
+          <div class="cicon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div class="ctxt"><span>Adresa</span><strong>Dr. Nikole Djuknica 4, Nis</strong></div>
+        </div>
+      </div>
+      <div class="map-wrap rev d2">
+        <iframe src="https://maps.google.com/maps?q=Dr.+Nikole+Djukni%C4%87a+4,+Ni%C5%A1,+Serbia&output=embed&z=16" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="1of1Detailing lokacija"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SOCIAL -->
+<section id="social" class="sec">
+  <div class="inner">
+    <span class="sec-label center rev">Prati nas</span>
+    <h2 class="sec-title center rev">Budite u toku</h2>
+    <p class="social-sub rev">Prati nas rad i rezultate u realnom vremenu.</p>
+    <div class="social-icons">
+      <a href="https://www.instagram.com/1of1detailingnis?igsh=ZHZsbWtmbzVuMjQx" target="_blank" rel="noopener" class="social-btn ig rev d1">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        Instagram
+      </a>
+      <a href="https://www.facebook.com/1of1DetailingNis/" target="_blank" rel="noopener" class="social-btn fb rev d2">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        Facebook
+      </a>
+      <a href="https://www.tiktok.com/@1of1_detailing?_r=1&_t=ZS-95pkyMccJM5" target="_blank" rel="noopener" class="social-btn tt rev d3">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.87a8.18 8.18 0 004.78 1.52V7a4.85 4.85 0 01-1.01-.31z"/></svg>
+        TikTok
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<section id="cta">
+  <h2 class="rev">Spreman za novi izgled<br>svog <span style="color:var(--orange)">auta?</span></h2>
+  <p class="rev">Zakazi termin danas — slobodnih mesta je uvek malo.</p>
+  <div class="cta-row">
+    <a href="tel:0631612619" class="btn-p rev d1">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 9.86 19.79 19.79 0 01.06 1.22 2 2 0 012 .07h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      Pozovi odmah
+    </a>
+    <a href="https://wa.me/381631612619" target="_blank" rel="noopener" class="btn-wa rev d2">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Pisi na WhatsApp
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="f-logo">1of1<span>Detailing</span> Nis</a>
+  <div class="f-mid"><p>"Svaki detalj je bitan."</p></div>
+  <div class="f-right">
+    <a href="tel:0631612619">063 161 2619</a><br>
+    <a href="https://www.instagram.com/1of1detailingnis?igsh=ZHZsbWtmbzVuMjQx" target="_blank" rel="noopener">Instagram</a>
+    <br><span style="color:#333;font-size:.72rem">&#169; 2025 1of1Detailing</span>
+  </div>
+</footer>
+
+<!-- FLOATERS -->
+<a href="tel:0631612619" class="float-call">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 9.86 19.79 19.79 0 01.06 1.22 2 2 0 012 .07h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+  Pozovi odmah
+</a>
+<a href="https://wa.me/381631612619" target="_blank" rel="noopener" class="float-wa">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cur'),cr=document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cur.style.transform='translate(-50%,-50%) scale(2.2)';cr.style.transform='translate(-50%,-50%) scale(1.6)';cr.style.opacity='.4'});
+  el.addEventListener('mouseleave',function(){cur.style.transform='translate(-50%,-50%) scale(1)';cr.style.transform='translate(-50%,-50%) scale(1)';cr.style.opacity='1'});
+});
+
+/* NAV */
+window.addEventListener('scroll',function(){document.getElementById('nav').classList.toggle('solid',scrollY>60)});
+
+/* MOBILE NAV */
+var ham=document.getElementById('ham'),mnav=document.getElementById('mnav');
+ham.addEventListener('click',function(){ham.classList.toggle('open');mnav.classList.toggle('open')});
+function closeMnav(){ham.classList.remove('open');mnav.classList.remove('open')}
+
+/* ORANGE DROPLETS */
+(function(){
+  var c=document.getElementById('drops-canvas');
+  var ctx=c.getContext('2d');
+  var W,H;
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  window.addEventListener('resize',resize);resize();
+
+  function Drop(){this.init()}
+  Drop.prototype.init=function(){
+    this.x=Math.random()*W;
+    this.y=Math.random()*H;
+    this.r=1.5+Math.random()*3;
+    this.vx=(Math.random()-.5)*.3;
+    this.vy=-.2-Math.random()*.5;
+    this.life=0;
+    this.maxLife=100+Math.random()*150;
+    this.pulse=Math.random()*Math.PI*2;
+  };
+  Drop.prototype.tick=function(){
+    this.x+=this.vx;this.y+=this.vy;
+    this.life++;this.pulse+=.04;
+    if(this.life>this.maxLife)this.init();
+  };
+  Drop.prototype.draw=function(){
+    var p=this.life/this.maxLife;
+    var a=p<.2?p/.2:p>.75?(1-p)/.25:1;
+    var pulse=1+Math.sin(this.pulse)*.15;
+    var rr=this.r*pulse;
+    ctx.save();
+    ctx.translate(this.x,this.y);
+    /* body circle */
+    ctx.beginPath();
+    ctx.arc(0,rr*.4,rr,0,Math.PI*2);
+    /* pointed top */
+    ctx.moveTo(-rr*.5,rr*.5);
+    ctx.quadraticCurveTo(0,-rr*1.3,rr*.5,rr*.5);
+    ctx.closePath();
+    var g=ctx.createRadialGradient(0,0,0,0,0,rr*2);
+    g.addColorStop(0,'rgba(255,140,40,'+(a*.5)+')');
+    g.addColorStop(1,'rgba(255,80,0,'+(a*.06)+')');
+    ctx.fillStyle=g;ctx.fill();
+    ctx.restore();
+    /* center shine dot */
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,rr*.4,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,120,0,'+(a*.35)+')';
+    ctx.fill();
+  };
+
+  var drops=[];
+  for(var i=0;i<55;i++){var d=new Drop();d.life=Math.random()*d.maxLife;drops.push(d)}
+
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<drops.length;i++){drops[i].tick();drops[i].draw()}
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+/* ACCORDION */
+document.querySelectorAll('[data-acc]').forEach(function(item){
+  item.querySelector('.acc-head').addEventListener('click',function(){
+    var wasOpen=item.classList.contains('open');
+    document.querySelectorAll('[data-acc]').forEach(function(i){i.classList.remove('open')});
+    if(!wasOpen)item.classList.add('open');
+  });
+});
+
+/* SCROLL REVEAL */
+(function(){
+  var els=document.querySelectorAll('.rev');
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('in')});
+  },{threshold:.12});
+  els.forEach(function(el){io.observe(el)});
+})();
+</script>
+</body>
+</html>
